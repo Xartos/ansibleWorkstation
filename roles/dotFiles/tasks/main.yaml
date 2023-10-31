@@ -4,15 +4,25 @@
     dest: "{{ ansible_env.HOME }}/privat/dotfiles"
     version: "main"
 
-# - name: Create sub-folders in .config
-#   file:
-#     state: directory
-#     path: "{{ ansible_env.HOME }}/.config/{{ item }}"
-#   loop: dot_config_folders
-
 - name: Link config in .config
   file:
     state: link
     path: "{{ ansible_env.HOME }}/.config/{{ item }}"
     src: "{{ ansible_env.HOME }}/privat/dotfiles/.config/{{ item }}"
   loop: dot_config_folders
+
+- name: Copy bashrc
+  copy:
+    dest: "{{ ansible_env.HOME }}/.bashrc"
+    src: "{{ ansible_env.HOME }}/privat/dotfiles/.bashrc"
+
+- name: Link bashrc directory
+  file:
+    state: link
+    path: "{{ ansible_env.HOME }}/.bashrc.d"
+    src: "{{ ansible_env.HOME }}/privat/dotfiles/.bashrc.d"
+
+- name: Copy gitconfig
+  copy:
+    dest: "{{ ansible_env.HOME }}/.gitconfig"
+    src: "{{ ansible_env.HOME }}/privat/dotfiles/.gitconfig"
