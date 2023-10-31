@@ -1,44 +1,61 @@
+- name: Create program folder
+  file:
+    state: directory
+    path: "{{ ansible_env.HOME }}/programs"
+
+- name: Create local bin folder
+  file:
+    state: directory
+    path: "{{ ansible_env.HOME }}/.local/bin"
+    recurse: true
 
 # Fonts
 
-- name: Create temporary directory
-  ansible.builtin.tempfile:
-    state: directory
-    suffix: fonts
-  register: download_dir
+- name: Install fonts
+  import_tasks: fonts.yaml
+  tags:
+    - fonts
 
-- name: Download JetBrains Nerd Font
-  get_url:
-    url: "https://download.jetbrains.com/fonts/JetBrainsMono-2.304.zip"
-    dest: "{{ download_dir }}/JetBrainsMono.zip"
+# LunarVIM
 
-- name: Create font dir
-  file:
-    state: directory
-    path: "{{ ansible_env.HOME }}/.fonts"
 
-- name: Create JetBrains font dir
-  file:
-    state: directory
-    path: "{{ ansible_env.HOME }}/.fonts/JetBrains"
-
-- name: Create extract dir
-  file:
-    state: directory
-    path: "{{ ansible_env.HOME }}/JetBrains"
-
-- name: Extract font
-  unarchive:
-    src: "{{ download_dir }}/JetBrainsMono.zip"
-    dest: "{{ download_dir }}/JetBrains"
-
-- name: Move font
-  copy:
-    src: "{{ download_dir }}/JetBrains/fonts/ttf/JetBrainsMono/"
-    dest: "{{ ansible_env.HOME }}/.fonts/JetBrains"
 
 # Helm
 
-# kind
+- name: Install helm
+  include_tasks: helm.yaml
+  loop: "{{ helm_versions }}"
+  loop_control:
+    loop_var: helm_version
 
+- name: Create link to current version
+  file:
+    state: link
+    path: "{{ ansible_env.HOME }}/programs/helm/helm"
+    src: "{{ ansible_env.HOME }}/programs/helm/helm_{{ helm_current_version }}"
 
+- name: Create link to version link
+  file:
+    state: link
+    path: "{{ ansible_env.HOME }}/.local/bin/helm"
+    src: "{{ ansible_env.HOME }}/programs/helm/helm"
+
+# Kind
+
+- name: Install kind
+  include_tasks: kind.yaml
+  loop: "{{ kind_versions }}"
+  loop_control:
+    loop_var: kind_version
+
+- name: Create link to current version
+  file:
+    state: link
+    path: "{{ ansible_env.HOME }}/programs/kind/kind"
+    src: "{{ ansible_env.HOME }}/programs/kind/kind_{{ kind_current_version }}"
+
+- name: Create link to version link
+  file:
+    state: link
+    path: "{{ ansible_env.HOME }}/.local/bin/kind"
+    src: "{{ ansible_env.HOME }}/programs/kind/kind"

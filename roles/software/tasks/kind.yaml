@@ -1,0 +1,20 @@
+- name: Create kind folder
+  file:
+    state: directory
+    path: "{{ ansible_env.HOME }}/programs/kind"
+
+- name: Download kind
+  get_url:
+    url: "https://kind.sigs.k8s.io/dl/v{{ kind_version }}/kind-linux-amd64"
+    dest: "{{ ansible_env.HOME }}/programs/kind"
+
+- name: Rename kind
+  copy:
+    src: "{{ ansible_env.HOME }}/programs/kind/kind-linux-amd64"
+    dest: "{{ ansible_env.HOME }}/programs/kind/kind_{{ kind_version }}"
+    mode: 0755
+
+- name: Cleanup kind binary
+  file:
+    state: absent
+    path: "{{ ansible_env.HOME }}/programs/kind/kind-linux-amd64"

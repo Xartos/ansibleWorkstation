@@ -1,0 +1,8 @@
+helm_current_version: 3.13.1
+helm_versions:
+  - 3.8.0
+  - 3.13.1
+
+kind_current_version: 0.20.0
+kind_versions:
+  - 0.20.0
