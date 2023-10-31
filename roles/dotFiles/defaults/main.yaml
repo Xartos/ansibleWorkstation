@@ -1,0 +1,8 @@
+dot_config_folders:
+  - sway
+  - kanshi
+  - foot
+  - waybar
+  - lvim
+  - rofi
+  - mako

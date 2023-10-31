@@ -1,0 +1,18 @@
+- name: Fetch dotfiles
+  git:
+    repo: git@github.com:Xartos/dotfiles.git
+    dest: "{{ ansible_env.HOME }}/privat/dotfiles"
+    version: "main"
+
+# - name: Create sub-folders in .config
+#   file:
+#     state: directory
+#     path: "{{ ansible_env.HOME }}/.config/{{ item }}"
+#   loop: dot_config_folders
+
+- name: Link config in .config
+  file:
+    state: link
+    path: "{{ ansible_env.HOME }}/.config/{{ item }}"
+    src: "{{ ansible_env.HOME }}/privat/dotfiles/.config/{{ item }}"
+  loop: dot_config_folders

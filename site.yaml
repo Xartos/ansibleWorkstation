@@ -1,0 +1,14 @@
+- name: APT
+  hosts: localhost
+  connection: local 
+  roles:
+    - role: apt
+      tags:
+        - apt
+- name: dot files
+  hosts: localhost
+  connection: local 
+  roles:
+    - role: dotFiles
+      tags:
+        - dotfiles

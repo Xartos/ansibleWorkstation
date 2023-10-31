@@ -1,0 +1,5 @@
+apt_packages:
+  - curl
+  - software-properties-common
+  - apt-transport-https
+  - ca-certificates
