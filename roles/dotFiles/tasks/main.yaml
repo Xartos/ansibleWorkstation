@@ -9,7 +9,7 @@
     state: link
     path: "{{ ansible_env.HOME }}/.config/{{ item }}"
     src: "{{ ansible_env.HOME }}/privat/dotfiles/.config/{{ item }}"
-  loop: dot_config_folders
+  loop: "{{ dot_config_folders }}"
 
 - name: Copy bashrc
   copy:
