@@ -17,6 +17,7 @@
   systemd:
     state: restarted
     name: gpg-agent
+    scope: user
 
 - name: Import public SSH key
   copy:
