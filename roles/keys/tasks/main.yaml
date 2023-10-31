@@ -1,0 +1,28 @@
+- name: Create folder for gnupg
+  file:
+    state: directory
+    path: "{{ ansible_env.HOME }}/.gnupg"
+
+- name: Create config for scdaemon
+  copy:
+    src: files/scdaemon.conf
+    dest: "{{ ansible_env.HOME }}/.gnupg/scdaemon.conf"
+
+# - name: Create config for gpg-agent
+#   copy:
+#     src: files/gpg-agent.conf
+#     dest: "{{ ansible_env.HOME }}/.gnupg/gpg-agent.conf"
+
+- name: Reload gpg-agent
+  systemd:
+    state: restarted
+    name: gpg-agent
+
+- name: Import public SSH key
+  copy:
+    src: files/gpg_ssh.pub
+    dest: "{{ ansible_env.HOME }}/.ssh/gpg_ssh.pub"
+    mode: 664
+
+- name: Import public key
+  shell: gpg --import files/public.key.asc

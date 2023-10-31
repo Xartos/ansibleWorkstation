@@ -5,6 +5,15 @@
     - role: apt
       tags:
         - apt
+
+- name: Keys
+  hosts: localhost
+  connection: local 
+  roles:
+    - role: keys
+      tags:
+        - keys
+
 - name: dot files
   hosts: localhost
   connection: local 
