@@ -19,6 +19,11 @@
     name: gpg-agent
     scope: user
 
+- name: Create folder for ssh
+  file:
+    state: directory
+    path: "{{ ansible_env.HOME }}/.ssh"
+
 - name: Import public SSH key
   copy:
     src: files/gpg_ssh.pub
@@ -26,4 +31,4 @@
     mode: 664
 
 - name: Import public key
-  shell: gpg --import files/public.key.asc
+  shell: "gpg --import {{ role_path }}/files/public.key.asc"
