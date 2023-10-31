@@ -14,6 +14,14 @@
       tags:
         - keys
 
+- name: Software
+  hosts: localhost
+  connection: local 
+  roles:
+    - role: software
+      tags:
+        - software
+
 - name: dot files
   hosts: localhost
   connection: local 

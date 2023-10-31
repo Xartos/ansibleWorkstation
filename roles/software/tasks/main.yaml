@@ -1,0 +1,44 @@
+
+# Fonts
+
+- name: Create temporary directory
+  ansible.builtin.tempfile:
+    state: directory
+    suffix: fonts
+  register: download_dir
+
+- name: Download JetBrains Nerd Font
+  get_url:
+    url: "https://download.jetbrains.com/fonts/JetBrainsMono-2.304.zip"
+    dest: "{{ download_dir }}/JetBrainsMono.zip"
+
+- name: Create font dir
+  file:
+    state: directory
+    path: "{{ ansible_env.HOME }}/.fonts"
+
+- name: Create JetBrains font dir
+  file:
+    state: directory
+    path: "{{ ansible_env.HOME }}/.fonts/JetBrains"
+
+- name: Create extract dir
+  file:
+    state: directory
+    path: "{{ ansible_env.HOME }}/JetBrains"
+
+- name: Extract font
+  unarchive:
+    src: "{{ download_dir }}/JetBrainsMono.zip"
+    dest: "{{ download_dir }}/JetBrains"
+
+- name: Move font
+  copy:
+    src: "{{ download_dir }}/JetBrains/fonts/ttf/JetBrainsMono/"
+    dest: "{{ ansible_env.HOME }}/.fonts/JetBrains"
+
+# Helm
+
+# kind
+
+
