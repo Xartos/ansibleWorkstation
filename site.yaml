@@ -1,10 +1,10 @@
-- name: APT
+- name: Pre-setup
   hosts: localhost
   connection: local 
   roles:
-    - role: apt
+    - role: pre-setup
       tags:
-        - apt
+        - pre-setup
 
 - name: Keys
   hosts: localhost
@@ -13,6 +13,14 @@
     - role: keys
       tags:
         - keys
+
+- name: Sway
+  hosts: localhost
+  connection: local 
+  roles:
+    - role: sway
+      tags:
+        - sway
 
 - name: Software
   hosts: localhost
