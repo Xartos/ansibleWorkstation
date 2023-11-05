@@ -1,0 +1,84 @@
+- name: Create pinentry folder
+  file:
+    state: directory
+    path: "{{ ansible_env.HOME }}/programs/pinentry-bemenu"
+
+- name: Check if bemenu exits
+  stat:
+    path: "{{ ansible_env.HOME }}/programs/pinentry-bemenu/bemenu/bemenu"
+  register: bemenu_stat
+
+- name: download if needed
+  when: not bemenu_stat.stat.exists
+  block:
+  - name: Install prerequisites
+    become: yes
+    apt:
+      pkg:
+        # Bemenu
+        - scdoc
+        - wayland-protocols
+        - libcairo-dev
+        - libpango1.0-dev
+        - libxkbcommon-dev
+        - libwayland-dev
+        - libncursesw5-dev
+        # Bemenu-pinentry
+        - libgpg-error-dev
+        - libassuan-dev
+        - libpopt-dev
+
+  - name: Clone bemenu
+    git:
+      repo: https://github.com/Cloudef/bemenu.git
+      dest: "{{ ansible_env.HOME }}/programs/pinentry-bemenu/bemenu"
+
+  - name: Compile bemenu
+    shell: make
+    args:
+      chdir: "{{ ansible_env.HOME }}/programs/pinentry-bemenu/bemenu"
+
+  - name: Install bemenu
+    shell: make install
+    become: yes
+    args:
+      chdir: "{{ ansible_env.HOME }}/programs/pinentry-bemenu/bemenu"
+
+  - name: ldconfig
+    shell: ldconfig
+    become: yes
+
+- name: Check if pinentry-bemenu exits
+  stat:
+    path: "{{ ansible_env.HOME }}/programs/pinentry-bemenu/repo/build/pinentry-bemenu"
+  register: pinentry_bemenu_stat
+
+- name: download if needed
+  when: not pinentry_bemenu_stat.stat.exists
+  block:
+  - name: Clone pinentry-bemenu
+    git:
+      repo: https://github.com/t-8ch/pinentry-bemenu.git
+      dest: "{{ ansible_env.HOME }}/programs/pinentry-bemenu/repo"
+
+  - name: Configure pinentry-bemenu
+    shell: meson build
+    args:
+      chdir: "{{ ansible_env.HOME }}/programs/pinentry-bemenu/repo"
+
+  - name: Compile pinentry-bemenu
+    shell: meson compile -C build
+    args:
+      chdir: "{{ ansible_env.HOME }}/programs/pinentry-bemenu/repo"
+
+  - name: Rename pinentry-bemenu
+    copy:
+      src: "{{ ansible_env.HOME }}/programs/pinentry-bemenu/repo/build/pinentry-bemenu"
+      dest: "{{ ansible_env.HOME }}/programs/pinentry-bemenu/pinentry-bemenu"
+      mode: 0755
+
+  - name: Create link to pinentry-bemenu
+    file:
+      state: link
+      path: "{{ ansible_env.HOME }}/.local/bin/pinentry-bemenu"
+      src: "{{ ansible_env.HOME }}/programs/pinentry-bemenu/pinentry-bemenu"

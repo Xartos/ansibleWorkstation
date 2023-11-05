@@ -1,0 +1,40 @@
+- name: Create kubecolor folder
+  file:
+    state: directory
+    path: "{{ ansible_env.HOME }}/programs/kubecolor"
+
+- name: Check if kubecolor version exits
+  stat:
+    path: "{{ ansible_env.HOME }}/programs/kubecolor/kubecolor_{{ kubecolor_version }}"
+  register: kubecolor_stat
+
+- name: Download if needed
+  when: not kubecolor_stat.stat.exists
+  block:
+  - name: Download kubecolor
+    get_url:
+      url: "https://github.com/kubecolor/kubecolor/releases/download/v{{ kubecolor_version }}/kubecolor_{{ kubecolor_version }}_Linux_x86_64.tar.gz"
+      dest: "{{ ansible_env.HOME }}/programs/kubecolor"
+
+  - name: Unarchive kubecolor
+    unarchive:
+      src: "{{ ansible_env.HOME }}/programs/kubecolor/kubecolor_{{ kubecolor_version }}_Linux_x86_64.tar.gz"
+      dest: "{{ ansible_env.HOME }}/programs/kubecolor/"
+      extra_opts:
+        - "kubecolor"
+
+  - name: Rename kubecolor
+    copy:
+      src: "{{ ansible_env.HOME }}/programs/kubecolor/kubecolor"
+      dest: "{{ ansible_env.HOME }}/programs/kubecolor/kubecolor_{{ kubecolor_version }}"
+      mode: 0755
+
+  - name: Cleanup kubecolor binary
+    file:
+      state: absent
+      path: "{{ ansible_env.HOME }}/programs/kubecolor/kubecolor"
+
+  - name: Cleanup kubecolor archive
+    file:
+      state: absent
+      path: "{{ ansible_env.HOME }}/programs/kubecolor/kubecolor_{{ kubecolor_version }}_Linux_x86_64.tar.gz"

@@ -1,0 +1,61 @@
+- name: Create velero folder
+  file:
+    state: directory
+    path: "{{ ansible_env.HOME }}/programs/velero"
+
+- name: Check if velero version exits
+  stat:
+    path: "{{ ansible_env.HOME }}/programs/velero/velero_{{ velero_version }}"
+  register: velero_stat
+
+- name: Download if needed
+  when: not velero_stat.stat.exists
+  block:
+  - name: Download velero
+    get_url:
+      url: "https://github.com/vmware-tanzu/velero/releases/download/v{{ velero_version }}/velero-v{{ velero_version }}-linux-amd64.tar.gz"
+      dest: "{{ ansible_env.HOME }}/programs/velero"
+
+  - name: Unarchive velero
+    unarchive:
+      src: "{{ ansible_env.HOME }}/programs/velero/velero-v{{ velero_version }}-linux-amd64.tar.gz"
+      dest: "{{ ansible_env.HOME }}/programs/velero/"
+      extra_opts:
+        - "--strip-components=1"
+        - "--no-wildcards"
+        - "--no-anchored"
+        - "velero"
+
+  - name: Rename velero
+    copy:
+      src: "{{ ansible_env.HOME }}/programs/velero/velero"
+      dest: "{{ ansible_env.HOME }}/programs/velero/velero_{{ velero_version }}"
+      mode: 0755
+
+  - name: Cleanup velero binary
+    file:
+      state: absent
+      path: "{{ ansible_env.HOME }}/programs/velero/velero"
+
+  - name: Cleanup velero archive
+    file:
+      state: absent
+      path: "{{ ansible_env.HOME }}/programs/velero/velero-v{{ velero_version }}-linux-amd64.tar.gz"
+
+  - name: Cleanup velero completion binary
+    file:
+      state: absent
+      path: "{{ ansible_env.HOME }}/programs/velero/bash.completion"
+
+- name: Check if password-store exits
+  stat:
+    path: "{{ ansible_env.HOME }}/.password-store"
+  register: password_store_stat
+
+- name: Download if needed
+  when: not password_store_stat.stat.exists
+  block:
+  - name: Clone repo
+    git:
+      repo: fliv@herobox.lan:~/passwd
+      dest: "{{ ansible_env.HOME }}/.password-store"

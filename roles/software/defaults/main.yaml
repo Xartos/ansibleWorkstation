@@ -3,6 +3,37 @@ helm_versions:
   - 3.8.0
   - 3.13.1
 
+helmfile_current_version: 0.158.1
+helmfile_versions:
+  - 0.158.1
+  - 0.154.0
+
+kubectl_current_version: 1.28.3
+kubectl_versions:
+  - 1.28.3
+  - 1.26.9
+
+kubecolor_current_version: 0.0.21
+kubecolor_versions:
+  - 0.0.21
+
 kind_current_version: 0.20.0
 kind_versions:
   - 0.20.0
+
+neovim_version: 0.9.4
+
+lunarvim_release: 1.3
+lunarvim_neovim_release: 0.9
+
+gopass_current_version: 1.15.8
+gopass_versions:
+  - 1.15.8
+
+terraform_current_version: 1.6.3
+terraform_versions:
+  - 1.6.3
+
+velero_current_version: 1.12.1
+velero_versions:
+  - 1.12.1

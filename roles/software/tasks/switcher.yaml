@@ -1,0 +1,11 @@
+- name: Create script for {{ binary_name }}
+  template:
+    src: files/switcher.sh.j2
+    dest: "{{ ansible_env.HOME }}/programs/{{ program_folder }}/{{ switcher_scrip_name }}"
+    mode: '0755'
+
+- name: Link script for {{ binary_name }}
+  file:
+    state: link
+    src: "{{ ansible_env.HOME }}/programs/{{ program_folder }}/{{ switcher_scrip_name }}"
+    dest: "{{ ansible_env.HOME }}/.local/bin/{{ switcher_scrip_name }}"

@@ -1,0 +1,40 @@
+- name: Create terraform folder
+  file:
+    state: directory
+    path: "{{ ansible_env.HOME }}/programs/terraform"
+
+- name: check if terraform version exits
+  stat:
+    path: "{{ ansible_env.HOME }}/programs/terraform/terraform_{{ terraform_version }}"
+  register: terraform_stat
+
+- name: download if needed
+  when: not terraform_stat.stat.exists
+  block:
+  - name: Download terraform
+    get_url:
+      url: "https://releases.hashicorp.com/terraform/{{ terraform_version }}/terraform_{{ terraform_version }}_linux_amd64.zip"
+      dest: "{{ ansible_env.HOME }}/programs/terraform"
+
+  - name: Unarchive terraform
+    unarchive:
+      src: "{{ ansible_env.HOME }}/programs/terraform/terraform_{{ terraform_version }}_linux_amd64.zip"
+      dest: "{{ ansible_env.HOME }}/programs/terraform/"
+      include:
+        - "terraform"
+
+  - name: Rename terraform
+    copy:
+      src: "{{ ansible_env.HOME }}/programs/terraform/terraform"
+      dest: "{{ ansible_env.HOME }}/programs/terraform/terraform_{{ terraform_version }}"
+      mode: 0755
+
+  - name: Cleanup terraform binary
+    file:
+      state: absent
+      path: "{{ ansible_env.HOME }}/programs/terraform/terraform"
+
+  - name: Cleanup terraform archive
+    file:
+      state: absent
+      path: "{{ ansible_env.HOME }}/programs/terraform/terraform_{{ terraform_version }}_linux_amd64.zip"

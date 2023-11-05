@@ -1,0 +1,37 @@
+- name: Check if lvim exits
+  shell: type lvim >/dev/null 2>&1
+  register: lvim_output
+
+- name: LunarVim
+  when: lvim_output.rc != 0
+  block:
+  - name: Install prerequisites via apt
+    become: yes
+    apt:
+      update_cache: yes
+      pkg:
+        - python3-pip
+        - python3
+        - npm
+        - nodejs
+        - cargo
+        - neovim
+
+  - name: Create temporary directory
+    tempfile:
+      state: directory
+      suffix: lunarvim
+    register: download_dir
+
+  - name: Download LunarVim install script
+    get_url:
+      url: "https://raw.githubusercontent.com/LunarVim/LunarVim/release-{{ lunarvim_release }}/neovim-{{ lunarvim_neovim_release }}/utils/installer/install.sh"
+      dest: "{{ download_dir.path }}/install.sh"
+      mode: 0755
+
+  - name: Run install script
+    shell:  "{{ download_dir.path }}/install.sh"
+    environment:
+      LV_BRANCH: "release-{{ lunarvim_release }}/neovim-{{ lunarvim_neovim_release }}"
+
+# Plugins

@@ -1,0 +1,40 @@
+- name: Create helmfile folder
+  file:
+    state: directory
+    path: "{{ ansible_env.HOME }}/programs/helmfile"
+
+- name: Check if helmfile version exits
+  stat:
+    path: "{{ ansible_env.HOME }}/programs/helmfile/helmfile_{{ helmfile_version }}"
+  register: helmfile_stat
+
+- name: Download if needed
+  when: not helmfile_stat.stat.exists
+  block:
+  - name: Download helmfile
+    get_url:
+      url: "https://github.com/helmfile/helmfile/releases/download/v{{ helmfile_version }}/helmfile_{{ helmfile_version }}_linux_amd64.tar.gz"
+      dest: "{{ ansible_env.HOME }}/programs/helmfile"
+
+  - name: Unarchive helmfile
+    unarchive:
+      src: "{{ ansible_env.HOME }}/programs/helmfile/helmfile_{{ helmfile_version }}_linux_amd64.tar.gz"
+      dest: "{{ ansible_env.HOME }}/programs/helmfile/"
+      extra_opts:
+        - "helmfile"
+
+  - name: Rename helmfile
+    copy:
+      src: "{{ ansible_env.HOME }}/programs/helmfile/helmfile"
+      dest: "{{ ansible_env.HOME }}/programs/helmfile/helmfile_{{ helmfile_version }}"
+      mode: 0755
+
+  - name: Cleanup helmfile binary
+    file:
+      state: absent
+      path: "{{ ansible_env.HOME }}/programs/helmfile/helmfile"
+
+  - name: Cleanup helmfile archive
+    file:
+      state: absent
+      path: "{{ ansible_env.HOME }}/programs/helmfile/helmfile_{{ helmfile_version }}_linux_amd64.tar.gz"

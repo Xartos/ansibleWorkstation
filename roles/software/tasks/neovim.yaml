@@ -1,0 +1,27 @@
+- name: Check if nvim exits
+  shell: type nvim >/dev/null 2>&1
+  register: nvim_output
+
+- name: NeoVim
+  when: nvim_output.rc != 0
+  block:
+  - name: Create neovim folder
+    file:
+      state: directory
+      path: "{{ ansible_env.HOME }}/programs/neovim"
+
+  - name: Download neovim
+    get_url:
+      url: "https://github.com/neovim/neovim/releases/download/v{{ neovim_version }}/nvim.appimage"
+      dest: "{{ ansible_env.HOME }}/programs/neovim"
+
+  - name: Rename neovim
+    copy:
+      src: "{{ ansible_env.HOME }}/programs/neovim/nvim.appimage"
+      dest: "{{ ansible_env.HOME }}/programs/neovim/nvim_{{ neovim_version }}.appimage"
+      mode: 0755
+
+  - name: Cleanup neovim binary
+    file:
+      state: absent
+      path: "{{ ansible_env.HOME }}/programs/neovim/nvim.appimage"

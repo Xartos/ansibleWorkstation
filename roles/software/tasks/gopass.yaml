@@ -1,0 +1,58 @@
+- name: Create gopass folder
+  file:
+    state: directory
+    path: "{{ ansible_env.HOME }}/programs/gopass"
+
+- name: Check if gopass version exits
+  stat:
+    path: "{{ ansible_env.HOME }}/programs/gopass/gopass_{{ gopass_version }}"
+  register: gopass_stat
+
+- name: Download if needed
+  when: not gopass_stat.stat.exists
+  block:
+  - name: Download gopass
+    get_url:
+      url: "https://github.com/gopasspw/gopass/releases/download/v{{ gopass_version }}/gopass-{{ gopass_version }}-linux-amd64.tar.gz"
+      dest: "{{ ansible_env.HOME }}/programs/gopass"
+
+  - name: Unarchive gopass
+    unarchive:
+      src: "{{ ansible_env.HOME }}/programs/gopass/gopass-{{ gopass_version }}-linux-amd64.tar.gz"
+      dest: "{{ ansible_env.HOME }}/programs/gopass/"
+      extra_opts:
+        - "gopass"
+
+  - name: Rename gopass
+    copy:
+      src: "{{ ansible_env.HOME }}/programs/gopass/gopass"
+      dest: "{{ ansible_env.HOME }}/programs/gopass/gopass_{{ gopass_version }}"
+      mode: 0755
+
+  - name: Cleanup gopass binary
+    file:
+      state: absent
+      path: "{{ ansible_env.HOME }}/programs/gopass/gopass"
+
+  - name: Cleanup gopass archive
+    file:
+      state: absent
+      path: "{{ ansible_env.HOME }}/programs/gopass/gopass-{{ gopass_version }}-linux-amd64.tar.gz"
+
+  - name: Cleanup gopass completion binary
+    file:
+      state: absent
+      path: "{{ ansible_env.HOME }}/programs/gopass/bash.completion"
+
+- name: Check if password-store exits
+  stat:
+    path: "{{ ansible_env.HOME }}/.password-store"
+  register: password_store_stat
+
+- name: Download if needed
+  when: not password_store_stat.stat.exists
+  block:
+  - name: Clone repo
+    git:
+      repo: fliv@herobox.lan:~/passwd
+      dest: "{{ ansible_env.HOME }}/.password-store"

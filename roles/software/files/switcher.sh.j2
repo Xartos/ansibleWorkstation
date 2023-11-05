@@ -1,0 +1,35 @@
+#!/bin/bash
+
+SCRIPTPATH="${HOME}/programs/{{ program_folder }}"
+
+if [[ "$#" -lt 1 ]]; then
+  echo "Available versions:"
+  mapfile -t available_versions < <(ls ${SCRIPTPATH}/{{ binary_name }}_* | grep -oP "{{ binary_name }}_\d+.\d+.\d+" | sed 's/{{ binary_name }}_//')
+  current_version=$(readlink -f "${SCRIPTPATH}/{{ binary_name }}" | sed 's!'"${SCRIPTPATH}"'/{{ binary_name }}_!!')
+  for i in "${available_versions[@]}"; do
+    echo -n "${i}"
+    if [[ "${i}" == "${current_version}" ]]; then
+      echo -n "*"
+    fi
+    echo
+  done
+  exit 0
+fi
+
+if [[ "${1}" == *help ]]; then
+  echo "Usage: ${0} <Version to switch to>"
+  echo "  If no version is specified the available versions are displayed"
+  echo "  If a version is specified this will set is as the current {{ binary_name }} version"
+  exit 1
+fi
+
+VERSION="${1}"
+
+if [[ ! -f "${SCRIPTPATH}/{{ binary_name }}_${VERSION}" ]]; then
+  echo "No {{ binary_name }} version ${1} found" >&2
+  echo "Run the command without arguments to see available versions" >&2
+  exit 1
+fi
+
+rm "${SCRIPTPATH}/{{ binary_name }}"
+ln -s "${SCRIPTPATH}/{{ binary_name }}_${VERSION}" "${SCRIPTPATH}/{{ binary_name }}"

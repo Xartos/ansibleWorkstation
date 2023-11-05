@@ -1,0 +1,28 @@
+- name: Create kubectl folder
+  file:
+    state: directory
+    path: "{{ ansible_env.HOME }}/programs/kubectl"
+
+- name: Check if kubectl version exits
+  stat:
+    path: "{{ ansible_env.HOME }}/programs/kubectl/kubectl_{{ kubectl_version }}"
+  register: kubectl_stat
+
+- name: Download if needed
+  when: not kubectl_stat.stat.exists
+  block:
+  - name: Download kubectl
+    get_url:
+      url: "https://dl.k8s.io/release/v{{ kubectl_version }}/bin/linux/amd64/kubectl"
+      dest: "{{ ansible_env.HOME }}/programs/kubectl"
+
+  - name: Rename kubectl
+    copy:
+      src: "{{ ansible_env.HOME }}/programs/kubectl/kubectl"
+      dest: "{{ ansible_env.HOME }}/programs/kubectl/kubectl_{{ kubectl_version }}"
+      mode: 0755
+
+  - name: Cleanup kubectl binary
+    file:
+      state: absent
+      path: "{{ ansible_env.HOME }}/programs/kubectl/kubectl"
