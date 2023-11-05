@@ -6,3 +6,10 @@ dot_config_folders:
   - lvim
   - rofi
   - mako
+  - systemd
+  - swaylock
+
+dot_config_systemd_units:
+  - kanshi
+  - qpwgraph
+  - mako

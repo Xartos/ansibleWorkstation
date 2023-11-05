@@ -11,6 +11,14 @@
     src: "{{ ansible_env.HOME }}/privat/dotfiles/.config/{{ item }}"
   loop: "{{ dot_config_folders }}"
 
+- name: Restart systemd units
+  systemd:
+    state: restarted
+    scope: user
+    daemon_reload: yes
+    name: "{{ item }}"
+  loop: "{{ dot_config_systemd_units }}"
+
 - name: Copy bashrc
   copy:
     dest: "{{ ansible_env.HOME }}/.bashrc"
