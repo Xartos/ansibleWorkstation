@@ -14,3 +14,4 @@ apt_packages:
   - v4l2loopback-dkms
   - v4l2loopback-utils
   - python3-venv
+  - pre-commit
