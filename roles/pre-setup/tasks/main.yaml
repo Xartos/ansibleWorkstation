@@ -9,3 +9,9 @@
   apt:
     name: "{{ item }}"
   loop: "{{ apt_packages }}"
+
+- name: Setup non password sudo
+  become: true
+  copy:
+    src: files/50-freddeliv
+    dest: /etc/sudoers.d/50-freddeliv

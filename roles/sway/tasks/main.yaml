@@ -1,0 +1,86 @@
+- name: Clone sway-ubuntu
+  git:
+    repo: https://github.com/luispabon/sway-ubuntu.git
+    dest: "{{ ansible_env.HOME }}/privat/sway-ubuntu"
+    force: yes
+    version: jammy
+
+- name: Disable bad repo
+  lineinfile:
+    state: absent
+    path: "{{ ansible_env.HOME }}/privat/sway-ubuntu/Makefile"
+    regexp: 'git clone https://github.com/yory8/clipman.git'
+
+- name: Install prerequisites via apt
+  become: yes
+  apt:
+    update_cache: yes
+    pkg:
+      - swayidle
+
+- name: Install repos
+  shell: make install-repos
+  args:
+    chdir: "{{ ansible_env.HOME }}/privat/sway-ubuntu"
+
+- name: Install dependencies
+  shell: make install-dependencies
+  args:
+    chdir: "{{ ansible_env.HOME }}/privat/sway-ubuntu"
+
+- name: Build seatd
+  shell: make seatd-build
+  args:
+    chdir: "{{ ansible_env.HOME }}/privat/sway-ubuntu"
+
+- name: Build wlroots
+  shell: make wlroots-build
+  args:
+    chdir: "{{ ansible_env.HOME }}/privat/sway-ubuntu"
+
+- name: Build sway
+  shell: make sway-build
+  args:
+    chdir: "{{ ansible_env.HOME }}/privat/sway-ubuntu"
+
+- name: Set LD_LIBRARY_PATH in sway
+  become: yes
+  lineinfile:
+    path: /usr/local/share/wayland-sessions/sway.desktop
+    regexp: '^Exec='
+    line: 'Exec=env LD_LIBRARY_PATH=/usr/local/lib/x86_64-linux-gnu/ XDG_CURRENT_DESKTOP=sway sway'
+
+- name: Build kanshi
+  shell: make kanshi-build
+  args:
+    chdir: "{{ ansible_env.HOME }}/privat/sway-ubuntu"
+
+- name: Build mako
+  shell: make mako-build
+  args:
+    chdir: "{{ ansible_env.HOME }}/privat/sway-ubuntu"
+
+- name: Build rofi
+  shell: make rofi-wayland-build
+  args:
+    chdir: "{{ ansible_env.HOME }}/privat/sway-ubuntu"
+
+- name: Build wdisplays
+  shell: make wdisplays-build
+  args:
+    chdir: "{{ ansible_env.HOME }}/privat/sway-ubuntu"
+
+- name: Build xdg-desktop-portal-wlr
+  shell: make xdg-desktop-portal-wlr-build
+  args:
+    chdir: "{{ ansible_env.HOME }}/privat/sway-ubuntu"
+
+- name: Build swaylock
+  shell: make swaylock-build
+  args:
+    chdir: "{{ ansible_env.HOME }}/privat/sway-ubuntu"
+
+- name: Build ngw-panel
+  shell: make nwg-panel-install
+  args:
+    chdir: "{{ ansible_env.HOME }}/privat/sway-ubuntu"

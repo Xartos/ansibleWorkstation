@@ -8,3 +8,9 @@ apt_packages:
   - scdaemon
   - pass
   - dnsutils
+  - brightnessctl
+  - jq
+  - gsimplecal
+  - v4l2loopback-dkms
+  - v4l2loopback-utils
+  - python3-venv
