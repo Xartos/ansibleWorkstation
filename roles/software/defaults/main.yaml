@@ -49,3 +49,5 @@ yq_versions:
 jq_current_version: 1.7
 jq_versions:
   - 1.7
+
+slack_version: 4.35.121

@@ -308,3 +308,9 @@
     state: link
     path: "{{ ansible_env.HOME }}/.local/bin/jq"
     src: "{{ ansible_env.HOME }}/programs/jq/jq"
+
+
+# Slack
+
+- name: Install slack
+  include_tasks: slack.yaml
