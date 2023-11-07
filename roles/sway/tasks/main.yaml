@@ -102,3 +102,14 @@
   shell: make waybar-build
   args:
     chdir: "{{ ansible_env.HOME }}/privat/sway-ubuntu"
+
+- name: Build swayimg
+  shell: make swayimg-build
+  args:
+    chdir: "{{ ansible_env.HOME }}/privat/sway-ubuntu"
+
+- name: Set swayimg as default
+  shell: xdg-mime default swayimg.desktop image/{{ item }}
+  loop:
+    - jpeg
+    - png
