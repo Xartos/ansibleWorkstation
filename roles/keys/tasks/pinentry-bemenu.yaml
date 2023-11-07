@@ -82,3 +82,9 @@
       state: link
       path: "{{ ansible_env.HOME }}/.local/bin/pinentry-bemenu"
       src: "{{ ansible_env.HOME }}/programs/pinentry-bemenu/pinentry-bemenu"
+
+  - name: Create pinentry-bemenu executor
+    copy:
+      src: files/pinentry-bemenu-executor
+      dest: "{{ ansible_env.HOME }}/programs/pinentry-bemenu/pinentry-bemenu-executor"
+      mode: '0755'

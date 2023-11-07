@@ -1,3 +1,6 @@
+- name: Install pinentry-bemenu
+  include_tasks: pinentry-bemenu.yaml
+
 - name: Create folder for gnupg
   file:
     state: directory
@@ -9,7 +12,7 @@
     dest: "{{ ansible_env.HOME }}/.gnupg/scdaemon.conf"
 
 - name: Create config for gpg-agent
-  copy:
+  template:
     src: files/gpg-agent.conf
     dest: "{{ ansible_env.HOME }}/.gnupg/gpg-agent.conf"
 

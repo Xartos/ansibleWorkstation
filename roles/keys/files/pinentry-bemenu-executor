@@ -1,0 +1,3 @@
+#!/bin/bash
+
+exec env BEMENU_BACKEND=wayland ${HOME}/.local/bin/pinentry-bemenu "${@}"
