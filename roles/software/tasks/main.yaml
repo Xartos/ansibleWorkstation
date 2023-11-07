@@ -1,252 +1,252 @@
-# - name: Create program folder
-#   file:
-#     state: directory
-#     path: "{{ ansible_env.HOME }}/programs"
+- name: Create program folder
+  file:
+    state: directory
+    path: "{{ ansible_env.HOME }}/programs"
 
-# - name: Create local bin folder
-#   file:
-#     state: directory
-#     path: "{{ ansible_env.HOME }}/.local/bin"
-#     recurse: true
+- name: Create local bin folder
+  file:
+    state: directory
+    path: "{{ ansible_env.HOME }}/.local/bin"
+    recurse: true
 
-# # Fonts
+# Fonts
 
-# - name: Install fonts
-#   import_tasks: fonts.yaml
-#   tags:
-#     - fonts
+- name: Install fonts
+  import_tasks: fonts.yaml
+  tags:
+    - fonts
 
-# # NeoVIM
+# NeoVIM
 
-# - name: Install NeoVim
-#   include_tasks: neovim.yaml
+- name: Install NeoVim
+  include_tasks: neovim.yaml
 
-# - name: Create link to current version
-#   file:
-#     state: link
-#     path: "{{ ansible_env.HOME }}/programs/neovim/nvim.appimage"
-#     src: "{{ ansible_env.HOME }}/programs/neovim/nvim_{{ neovim_version }}.appimage"
+- name: Create link to current version
+  file:
+    state: link
+    path: "{{ ansible_env.HOME }}/programs/neovim/nvim.appimage"
+    src: "{{ ansible_env.HOME }}/programs/neovim/nvim_{{ neovim_version }}.appimage"
 
-# - name: Create link to version link
-#   file:
-#     state: link
-#     path: "{{ ansible_env.HOME }}/.local/bin/nvim"
-#     src: "{{ ansible_env.HOME }}/programs/neovim/nvim.appimage"
+- name: Create link to version link
+  file:
+    state: link
+    path: "{{ ansible_env.HOME }}/.local/bin/nvim"
+    src: "{{ ansible_env.HOME }}/programs/neovim/nvim.appimage"
 
-# # LunarVIM
+# LunarVIM
 
 
-# - name: Install LunarVim
-#   include_tasks: lunarvim.yaml
+- name: Install LunarVim
+  include_tasks: lunarvim.yaml
 
-# # Kubectl
+# Kubectl
 
-# - name: Install kubectl
-#   include_tasks: kubectl.yaml
-#   loop: "{{ kubectl_versions }}"
-#   loop_control:
-#     loop_var: kubectl_version
+- name: Install kubectl
+  include_tasks: kubectl.yaml
+  loop: "{{ kubectl_versions }}"
+  loop_control:
+    loop_var: kubectl_version
 
-# - name: Create link to current version
-#   file:
-#     state: link
-#     path: "{{ ansible_env.HOME }}/programs/kubectl/kubectl"
-#     src: "{{ ansible_env.HOME }}/programs/kubectl/kubectl_{{ kubectl_current_version }}"
+- name: Create link to current version
+  file:
+    state: link
+    path: "{{ ansible_env.HOME }}/programs/kubectl/kubectl"
+    src: "{{ ansible_env.HOME }}/programs/kubectl/kubectl_{{ kubectl_current_version }}"
 
-# - name: Create link to version link
-#   file:
-#     state: link
-#     path: "{{ ansible_env.HOME }}/.local/bin/kubectl"
-#     src: "{{ ansible_env.HOME }}/programs/kubectl/kubectl"
+- name: Create link to version link
+  file:
+    state: link
+    path: "{{ ansible_env.HOME }}/.local/bin/kubectl"
+    src: "{{ ansible_env.HOME }}/programs/kubectl/kubectl"
 
-# - name: Install kubectl switcher
-#   include_tasks: switcher.yaml
-#   vars:
-#     binary_name: kubectl
-#     program_folder: kubectl
-#     switcher_scrip_name: kubectl_switch
+- name: Install kubectl switcher
+  include_tasks: switcher.yaml
+  vars:
+    binary_name: kubectl
+    program_folder: kubectl
+    switcher_scrip_name: kubectl_switch
 
-# # Kubecolor
+# Kubecolor
 
-# - name: Install kubecolor
-#   include_tasks: kubecolor.yaml
-#   loop: "{{ kubecolor_versions }}"
-#   loop_control:
-#     loop_var: kubecolor_version
+- name: Install kubecolor
+  include_tasks: kubecolor.yaml
+  loop: "{{ kubecolor_versions }}"
+  loop_control:
+    loop_var: kubecolor_version
 
-# - name: Create link to current version
-#   file:
-#     state: link
-#     path: "{{ ansible_env.HOME }}/programs/kubecolor/kubecolor"
-#     src: "{{ ansible_env.HOME }}/programs/kubecolor/kubecolor_{{ kubecolor_current_version }}"
+- name: Create link to current version
+  file:
+    state: link
+    path: "{{ ansible_env.HOME }}/programs/kubecolor/kubecolor"
+    src: "{{ ansible_env.HOME }}/programs/kubecolor/kubecolor_{{ kubecolor_current_version }}"
 
-# - name: Create link to version link
-#   file:
-#     state: link
-#     path: "{{ ansible_env.HOME }}/.local/bin/kubecolor"
-#     src: "{{ ansible_env.HOME }}/programs/kubecolor/kubecolor"
+- name: Create link to version link
+  file:
+    state: link
+    path: "{{ ansible_env.HOME }}/.local/bin/kubecolor"
+    src: "{{ ansible_env.HOME }}/programs/kubecolor/kubecolor"
 
-# # Helm
+# Helm
 
-# - name: Install helm
-#   include_tasks: helm.yaml
-#   loop: "{{ helm_versions }}"
-#   loop_control:
-#     loop_var: helm_version
+- name: Install helm
+  include_tasks: helm.yaml
+  loop: "{{ helm_versions }}"
+  loop_control:
+    loop_var: helm_version
 
-# - name: Create link to current version
-#   file:
-#     state: link
-#     path: "{{ ansible_env.HOME }}/programs/helm/helm"
-#     src: "{{ ansible_env.HOME }}/programs/helm/helm_{{ helm_current_version }}"
+- name: Create link to current version
+  file:
+    state: link
+    path: "{{ ansible_env.HOME }}/programs/helm/helm"
+    src: "{{ ansible_env.HOME }}/programs/helm/helm_{{ helm_current_version }}"
 
-# - name: Create link to version link
-#   file:
-#     state: link
-#     path: "{{ ansible_env.HOME }}/.local/bin/helm"
-#     src: "{{ ansible_env.HOME }}/programs/helm/helm"
+- name: Create link to version link
+  file:
+    state: link
+    path: "{{ ansible_env.HOME }}/.local/bin/helm"
+    src: "{{ ansible_env.HOME }}/programs/helm/helm"
 
-# - name: Install helm switcher
-#   include_tasks: switcher.yaml
-#   vars:
-#     binary_name: helm
-#     program_folder: helm
-#     switcher_scrip_name: helm_switch
+- name: Install helm switcher
+  include_tasks: switcher.yaml
+  vars:
+    binary_name: helm
+    program_folder: helm
+    switcher_scrip_name: helm_switch
 
-# # Helmfile
+# Helmfile
 
-# - name: Install helmfile
-#   include_tasks: helmfile.yaml
-#   loop: "{{ helmfile_versions }}"
-#   loop_control:
-#     loop_var: helmfile_version
+- name: Install helmfile
+  include_tasks: helmfile.yaml
+  loop: "{{ helmfile_versions }}"
+  loop_control:
+    loop_var: helmfile_version
 
-# - name: Create link to current version
-#   file:
-#     state: link
-#     path: "{{ ansible_env.HOME }}/programs/helmfile/helmfile"
-#     src: "{{ ansible_env.HOME }}/programs/helmfile/helmfile_{{ helmfile_current_version }}"
+- name: Create link to current version
+  file:
+    state: link
+    path: "{{ ansible_env.HOME }}/programs/helmfile/helmfile"
+    src: "{{ ansible_env.HOME }}/programs/helmfile/helmfile_{{ helmfile_current_version }}"
 
-# - name: Create link to version link
-#   file:
-#     state: link
-#     path: "{{ ansible_env.HOME }}/.local/bin/helmfile"
-#     src: "{{ ansible_env.HOME }}/programs/helmfile/helmfile"
+- name: Create link to version link
+  file:
+    state: link
+    path: "{{ ansible_env.HOME }}/.local/bin/helmfile"
+    src: "{{ ansible_env.HOME }}/programs/helmfile/helmfile"
 
-# - name: Install helmfile switcher
-#   include_tasks: switcher.yaml
-#   vars:
-#     binary_name: helmfile
-#     program_folder: helmfile
-#     switcher_scrip_name: hf_switch
+- name: Install helmfile switcher
+  include_tasks: switcher.yaml
+  vars:
+    binary_name: helmfile
+    program_folder: helmfile
+    switcher_scrip_name: hf_switch
 
-# # Kind
+# Kind
 
-# - name: Install kind
-#   include_tasks: kind.yaml
-#   loop: "{{ kind_versions }}"
-#   loop_control:
-#     loop_var: kind_version
+- name: Install kind
+  include_tasks: kind.yaml
+  loop: "{{ kind_versions }}"
+  loop_control:
+    loop_var: kind_version
 
-# - name: Create link to current version
-#   file:
-#     state: link
-#     path: "{{ ansible_env.HOME }}/programs/kind/kind"
-#     src: "{{ ansible_env.HOME }}/programs/kind/kind_{{ kind_current_version }}"
+- name: Create link to current version
+  file:
+    state: link
+    path: "{{ ansible_env.HOME }}/programs/kind/kind"
+    src: "{{ ansible_env.HOME }}/programs/kind/kind_{{ kind_current_version }}"
 
-# - name: Create link to version link
-#   file:
-#     state: link
-#     path: "{{ ansible_env.HOME }}/.local/bin/kind"
-#     src: "{{ ansible_env.HOME }}/programs/kind/kind"
+- name: Create link to version link
+  file:
+    state: link
+    path: "{{ ansible_env.HOME }}/.local/bin/kind"
+    src: "{{ ansible_env.HOME }}/programs/kind/kind"
 
-# # pinentry-bemenu
+# pinentry-bemenu
 
-# - name: Install pinentry-bemenu
-#   include_tasks: pinentry-bemenu.yaml
+- name: Install pinentry-bemenu
+  include_tasks: pinentry-bemenu.yaml
 
-# # Openstack
+# Openstack
 
-# - name: Install openstack cli
-#   become: yes
-#   apt:
-#     pkg:
-#       - python3-openstackclient
-#       - python3-cinderclient
+- name: Install openstack cli
+  become: yes
+  apt:
+    pkg:
+      - python3-openstackclient
+      - python3-cinderclient
 
-# # Gopass
+# Gopass
 
-# - name: Install gopass
-#   include_tasks: gopass.yaml
-#   loop: "{{ gopass_versions }}"
-#   loop_control:
-#     loop_var: gopass_version
+- name: Install gopass
+  include_tasks: gopass.yaml
+  loop: "{{ gopass_versions }}"
+  loop_control:
+    loop_var: gopass_version
 
-# - name: Create link to current version
-#   file:
-#     state: link
-#     path: "{{ ansible_env.HOME }}/programs/gopass/gopass"
-#     src: "{{ ansible_env.HOME }}/programs/gopass/gopass_{{ gopass_current_version }}"
+- name: Create link to current version
+  file:
+    state: link
+    path: "{{ ansible_env.HOME }}/programs/gopass/gopass"
+    src: "{{ ansible_env.HOME }}/programs/gopass/gopass_{{ gopass_current_version }}"
 
-# - name: Create link to version link
-#   file:
-#     state: link
-#     path: "{{ ansible_env.HOME }}/.local/bin/gopass"
-#     src: "{{ ansible_env.HOME }}/programs/gopass/gopass"
+- name: Create link to version link
+  file:
+    state: link
+    path: "{{ ansible_env.HOME }}/.local/bin/gopass"
+    src: "{{ ansible_env.HOME }}/programs/gopass/gopass"
 
-# # Terrraform
+# Terrraform
 
-# - name: Install terraform
-#   include_tasks: terraform.yaml
-#   loop: "{{ terraform_versions }}"
-#   loop_control:
-#     loop_var: terraform_version
+- name: Install terraform
+  include_tasks: terraform.yaml
+  loop: "{{ terraform_versions }}"
+  loop_control:
+    loop_var: terraform_version
 
-# - name: Create link to current version
-#   file:
-#     state: link
-#     path: "{{ ansible_env.HOME }}/programs/terraform/terraform"
-#     src: "{{ ansible_env.HOME }}/programs/terraform/terraform_{{ terraform_current_version }}"
+- name: Create link to current version
+  file:
+    state: link
+    path: "{{ ansible_env.HOME }}/programs/terraform/terraform"
+    src: "{{ ansible_env.HOME }}/programs/terraform/terraform_{{ terraform_current_version }}"
 
-# - name: Create link to version link
-#   file:
-#     state: link
-#     path: "{{ ansible_env.HOME }}/.local/bin/terraform"
-#     src: "{{ ansible_env.HOME }}/programs/terraform/terraform"
+- name: Create link to version link
+  file:
+    state: link
+    path: "{{ ansible_env.HOME }}/.local/bin/terraform"
+    src: "{{ ansible_env.HOME }}/programs/terraform/terraform"
 
-# - name: Install terraform switcher
-#   include_tasks: switcher.yaml
-#   vars:
-#     binary_name: terraform
-#     program_folder: terraform
-#     switcher_scrip_name: tf_switch
+- name: Install terraform switcher
+  include_tasks: switcher.yaml
+  vars:
+    binary_name: terraform
+    program_folder: terraform
+    switcher_scrip_name: tf_switch
 
-# # Velero
+# Velero
 
-# - name: Install velero
-#   include_tasks: velero.yaml
-#   loop: "{{ velero_versions }}"
-#   loop_control:
-#     loop_var: velero_version
+- name: Install velero
+  include_tasks: velero.yaml
+  loop: "{{ velero_versions }}"
+  loop_control:
+    loop_var: velero_version
 
-# - name: Create link to current version
-#   file:
-#     state: link
-#     path: "{{ ansible_env.HOME }}/programs/velero/velero"
-#     src: "{{ ansible_env.HOME }}/programs/velero/velero_{{ velero_current_version }}"
+- name: Create link to current version
+  file:
+    state: link
+    path: "{{ ansible_env.HOME }}/programs/velero/velero"
+    src: "{{ ansible_env.HOME }}/programs/velero/velero_{{ velero_current_version }}"
 
-# - name: Create link to version link
-#   file:
-#     state: link
-#     path: "{{ ansible_env.HOME }}/.local/bin/velero"
-#     src: "{{ ansible_env.HOME }}/programs/velero/velero"
+- name: Create link to version link
+  file:
+    state: link
+    path: "{{ ansible_env.HOME }}/.local/bin/velero"
+    src: "{{ ansible_env.HOME }}/programs/velero/velero"
 
-# - name: Install velero switcher
-#   include_tasks: switcher.yaml
-#   vars:
-#     binary_name: velero
-#     program_folder: velero
-#     switcher_scrip_name: velero_switch
+- name: Install velero switcher
+  include_tasks: switcher.yaml
+  vars:
+    binary_name: velero
+    program_folder: velero
+    switcher_scrip_name: velero_switch
 
 # browserpass
 

@@ -1,6 +1,7 @@
 - name: Check if lvim exits
   shell: type lvim >/dev/null 2>&1
   register: lvim_output
+  ignore_errors: yes
 
 - name: LunarVim
   when: lvim_output.rc != 0

@@ -1,6 +1,7 @@
 - name: Check if nvim exits
   shell: type nvim >/dev/null 2>&1
   register: nvim_output
+  ignore_errors: yes
 
 - name: NeoVim
   when: nvim_output.rc != 0

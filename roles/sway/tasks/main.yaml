@@ -43,6 +43,19 @@
   args:
     chdir: "{{ ansible_env.HOME }}/privat/sway-ubuntu"
 
+- name: Create directory for login manager
+  become: yes
+  file:
+    state: directory
+    path: "/usr/share/wayland-sessions/"
+
+- name: Create link for login manager
+  become: yes
+  file:
+    state: link
+    src: /usr/local/share/wayland-sessions/sway.desktop
+    path: /usr/share/wayland-sessions/sway.desktop
+
 - name: Set LD_LIBRARY_PATH in sway
   become: yes
   lineinfile:
@@ -82,5 +95,10 @@
 
 - name: Build ngw-panel
   shell: make nwg-panel-install
+  args:
+    chdir: "{{ ansible_env.HOME }}/privat/sway-ubuntu"
+
+- name: Build waybar
+  shell: make waybar-build
   args:
     chdir: "{{ ansible_env.HOME }}/privat/sway-ubuntu"

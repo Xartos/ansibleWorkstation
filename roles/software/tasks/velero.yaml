@@ -46,16 +46,3 @@
     file:
       state: absent
       path: "{{ ansible_env.HOME }}/programs/velero/bash.completion"
-
-- name: Check if password-store exits
-  stat:
-    path: "{{ ansible_env.HOME }}/.password-store"
-  register: password_store_stat
-
-- name: Download if needed
-  when: not password_store_stat.stat.exists
-  block:
-  - name: Clone repo
-    git:
-      repo: fliv@herobox.lan:~/passwd
-      dest: "{{ ansible_env.HOME }}/.password-store"
