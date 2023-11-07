@@ -16,3 +16,4 @@ apt_packages:
   - python3-venv
   - pre-commit
   - foot
+  - python3-psutil
