@@ -1,4 +1,12 @@
-- name: Install slack
-  become: yes
-  apt:
-    deb: https://downloads.slack-edge.com/releases/linux/{{ slack_version }}/prod/x64/slack-desktop-{{ slack_version }}-amd64.deb
+- name: Check if slack exits
+  shell: type slack >/dev/null 2>&1
+  register: slack_output
+  ignore_errors: yes
+
+- name: NeoVim
+  when: slack_output.rc != 0
+  block:
+  - name: Install slack
+    become: yes
+    apt:
+      deb: https://downloads.slack-edge.com/releases/linux/{{ slack_version }}/prod/x64/slack-desktop-{{ slack_version }}-amd64.deb
