@@ -1,0 +1,70 @@
+- name: Create browserpass folder
+  file:
+    state: directory
+    path: "{{ ansible_env.HOME }}/programs/browserpass"
+
+
+- name: Check if browserpass-native exits
+  stat:
+    path: "{{ ansible_env.HOME }}/programs/browserpass/browserpass_{{ browserpass_version }}"
+  register: browserpass_stat
+
+- name: Browserpass
+  when: not browserpass_stat.stat.exists
+  block:
+  - name: Download browserpass
+    get_url:
+      url: "https://github.com/browserpass/browserpass-native/releases/download/{{ browserpass_version }}/browserpass-linux64-{{ browserpass_version }}.tar.gz"
+      dest: "{{ ansible_env.HOME }}/programs/browserpass"
+
+  - name: Unarchive browserpass
+    unarchive:
+      src: "{{ ansible_env.HOME }}/programs/browserpass/browserpass-linux64-{{ browserpass_version }}.tar.gz"
+      dest: "{{ ansible_env.HOME }}/programs/browserpass/"
+      extra_opts:
+        - "--strip-components=1"
+        - "--no-wildcards"
+        - "--no-anchored"
+        - "browserpass-linux64"
+
+  - name: Rename browserpass
+    copy:
+      src: "{{ ansible_env.HOME }}/programs/browserpass/browserpass-linux64"
+      dest: "{{ ansible_env.HOME }}/programs/browserpass/browserpass_{{ browserpass_version }}"
+      mode: 0755
+
+  - name: Cleanup browserpass binary
+    file:
+      state: absent
+      path: "{{ ansible_env.HOME }}/programs/browserpass/browserpass-linux64"
+
+  - name: Cleanup browserpass archive
+    file:
+      state: absent
+      path: "{{ ansible_env.HOME }}/programs/browserpass/browserpass-linux64-{{ browserpass_version }}.tar.gz"
+
+  - name: Create firefox host folder
+    become: yes
+    file:
+      state: directory
+      path: "/usr/lib/browserpass/hosts/firefox"
+
+  - name: Create firefox host file
+    vars:
+      browserpass_binary_path: "{{ ansible_env.HOME }}/.local/bin/browserpass"
+    become: yes
+    template:
+      src: files/firefox-host.json.j2
+      dest: "/usr/lib/browserpass/hosts/firefox/com.github.browserpass.native.json"
+      mode: '0644'
+
+  - name: Create firefox host folder for user
+    file:
+      state: directory
+      path: "{{ ansible_env.HOME }}/.mozilla/native-messaging-hosts"
+
+  - name: Link firefox hosts file for user
+    file:
+      state: link
+      src: "/usr/lib/browserpass/hosts/firefox/com.github.browserpass.native.json"
+      path: "{{ ansible_env.HOME }}/.mozilla/native-messaging-hosts/com.github.browserpass.native.json"
