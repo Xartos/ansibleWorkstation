@@ -3,6 +3,7 @@
     repo: git@github.com:Xartos/dotfiles.git
     dest: "{{ ansible_env.HOME }}/privat/dotfiles"
     version: "main"
+    accept_newhostkey: true
 
 - name: Link config in .config
   file:

@@ -54,5 +54,6 @@
   block:
   - name: Clone repo
     git:
+      accept_newhostkey: true
       repo: fliv@herobox.lan:~/passwd
       dest: "{{ ansible_env.HOME }}/.password-store"
