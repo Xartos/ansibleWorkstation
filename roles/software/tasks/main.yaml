@@ -160,11 +160,6 @@
     path: "{{ ansible_env.HOME }}/.local/bin/kind"
     src: "{{ ansible_env.HOME }}/programs/kind/kind"
 
-# pinentry-bemenu
-
-- name: Install pinentry-bemenu
-  include_tasks: pinentry-bemenu.yaml
-
 # Openstack
 
 - name: Install openstack cli
@@ -267,3 +262,49 @@
     state: link
     path: "{{ ansible_env.HOME }}/.local/bin/browserpass"
     src: "{{ ansible_env.HOME }}/programs/browserpass/browserpass"
+
+# yq
+
+- name: Install yq
+  include_tasks: yq.yaml
+  loop: "{{ yq_versions }}"
+  loop_control:
+    loop_var: yq_version
+
+- name: Create link to current version
+  file:
+    state: link
+    path: "{{ ansible_env.HOME }}/programs/yq/yq"
+    src: "{{ ansible_env.HOME }}/programs/yq/yq_{{ yq_current_version }}"
+
+- name: Create link to version link
+  file:
+    state: link
+    path: "{{ ansible_env.HOME }}/.local/bin/yq"
+    src: "{{ ansible_env.HOME }}/programs/yq/yq"
+
+- name: Create link to yq as yq4
+  file:
+    state: link
+    path: "{{ ansible_env.HOME }}/.local/bin/yq4"
+    src: "{{ ansible_env.HOME }}/programs/yq/yq"
+
+# jq
+
+- name: Install jq
+  include_tasks: jq.yaml
+  loop: "{{ jq_versions }}"
+  loop_control:
+    loop_var: jq_version
+
+- name: Create link to current version
+  file:
+    state: link
+    path: "{{ ansible_env.HOME }}/programs/jq/jq"
+    src: "{{ ansible_env.HOME }}/programs/jq/jq_{{ jq_current_version }}"
+
+- name: Create link to version link
+  file:
+    state: link
+    path: "{{ ansible_env.HOME }}/.local/bin/jq"
+    src: "{{ ansible_env.HOME }}/programs/jq/jq"

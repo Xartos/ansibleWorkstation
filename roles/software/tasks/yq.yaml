@@ -1,0 +1,28 @@
+- name: Create yq folder
+  file:
+    state: directory
+    path: "{{ ansible_env.HOME }}/programs/yq"
+
+- name: Check if yq version exits
+  stat:
+    path: "{{ ansible_env.HOME }}/programs/yq/yq_{{ yq_version }}"
+  register: yq_stat
+
+- name: Download if needed
+  when: not yq_stat.stat.exists
+  block:
+  - name: Download yq
+    get_url:
+      url: "https://github.com/mikefarah/yq/releases/download/v{{ yq_version }}/yq_linux_amd64"
+      dest: "{{ ansible_env.HOME }}/programs/yq"
+
+  - name: Rename yq
+    copy:
+      src: "{{ ansible_env.HOME }}/programs/yq/yq_linux_amd64"
+      dest: "{{ ansible_env.HOME }}/programs/yq/yq_{{ yq_version }}"
+      mode: 0755
+
+  - name: Cleanup yq binary
+    file:
+      state: absent
+      path: "{{ ansible_env.HOME }}/programs/yq/yq_linux_amd64"

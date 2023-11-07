@@ -41,3 +41,11 @@ velero_versions:
 browserpass_current_version: 3.1.0
 browserpass_versions:
   - 3.1.0
+
+yq_current_version: 4.35.2
+yq_versions:
+  - 4.35.2
+
+jq_current_version: 1.7
+jq_versions:
+  - 1.7

@@ -1,0 +1,29 @@
+- name: Create jq folder
+  file:
+    state: directory
+    path: "{{ ansible_env.HOME }}/programs/jq"
+
+- name: Check if jq version exits
+  stat:
+    path: "{{ ansible_env.HOME }}/programs/jq/jq_{{ jq_version }}"
+  register: jq_stat
+
+- name: Download if needed
+  when: not jq_stat.stat.exists
+  block:
+  - name: Download jq
+    get_url:
+      url: "https://github.com/jqlang/jq/releases/download/jq-{{ jq_version }}/jq-linux-amd64"
+      dest: "{{ ansible_env.HOME }}/programs/jq"
+
+  - name: Rename jq
+    copy:
+      src: "{{ ansible_env.HOME }}/programs/jq/jq-linux-amd64"
+      dest: "{{ ansible_env.HOME }}/programs/jq/jq_{{ jq_version }}"
+      mode: 0755
+
+  - name: Cleanup jq binary
+    file:
+      state: absent
+      path: "{{ ansible_env.HOME }}/programs/jq/jq-linux-amd64"
+
