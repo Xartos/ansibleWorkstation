@@ -8,6 +8,8 @@ dot_config_folders:
   - mako
   - systemd
   - swaylock
+  - xdg-desktop-portal-wlr
+  - gsimplecal
 
 dot_config_systemd_units:
   - kanshi
