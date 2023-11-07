@@ -1,0 +1,46 @@
+- name: Create grim folder
+  file:
+    state: directory
+    path: "{{ ansible_env.HOME }}/programs/grim"
+
+- name: Check if grim exits
+  stat:
+    path: "{{ ansible_env.HOME }}/programs/grim/grim"
+  register: grim_stat
+
+- name: download if needed
+  when: not grim_stat.stat.exists
+  block:
+  - name: Install prerequisites
+    become: yes
+    apt:
+      pkg:
+        - libpixman-1-dev
+        - libpng-dev
+
+  - name: Clone grim
+    git:
+      repo: https://git.sr.ht/~emersion/grim
+      dest: "{{ ansible_env.HOME }}/programs/grim/repo"
+
+  - name: Configure grim
+    shell: meson setup build
+    args:
+      chdir: "{{ ansible_env.HOME }}/programs/grim/repo"
+
+  - name: Compile grim
+    shell: ninja -C build
+    args:
+      chdir: "{{ ansible_env.HOME }}/programs/grim/repo"
+
+  - name: Rename grim
+    copy:
+      src: "{{ ansible_env.HOME }}/programs/grim/repo/build/grim"
+      dest: "{{ ansible_env.HOME }}/programs/grim/grim"
+      mode: 0755
+
+  - name: Create link to grim
+    file:
+      state: link
+      path: "{{ ansible_env.HOME }}/.local/bin/grim"
+      src: "{{ ansible_env.HOME }}/programs/grim/grim"

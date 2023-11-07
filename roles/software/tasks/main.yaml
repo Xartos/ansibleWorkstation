@@ -314,3 +314,13 @@
 
 - name: Install slack
   include_tasks: slack.yaml
+
+# Slurp
+
+- name: Install slurp
+  include_tasks: slurp.yaml
+
+# Grim
+
+- name: Install grim
+  include_tasks: grim.yaml

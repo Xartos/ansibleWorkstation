@@ -1,0 +1,50 @@
+- name: Create slurp folder
+  file:
+    state: directory
+    path: "{{ ansible_env.HOME }}/programs/slurp"
+
+- name: Check if slurp exits
+  stat:
+    path: "{{ ansible_env.HOME }}/programs/slurp/slurp"
+  register: slurp_stat
+
+- name: download if needed
+  when: not slurp_stat.stat.exists
+  block:
+  - name: Install prerequisites
+    become: yes
+    apt:
+      pkg:
+        # slurp
+        - scdoc
+        - wayland-protocols
+        - libcairo-dev
+        - libxkbcommon-dev
+        - libwayland-dev
+
+  - name: Clone slurp
+    git:
+      repo: https://github.com/emersion/slurp.git
+      dest: "{{ ansible_env.HOME }}/programs/slurp/repo"
+
+  - name: Configure slurp
+    shell: meson setup build
+    args:
+      chdir: "{{ ansible_env.HOME }}/programs/slurp/repo"
+
+  - name: Compile slurp
+    shell: ninja -C build
+    args:
+      chdir: "{{ ansible_env.HOME }}/programs/slurp/repo"
+
+  - name: Rename slurp
+    copy:
+      src: "{{ ansible_env.HOME }}/programs/slurp/repo/build/slurp"
+      dest: "{{ ansible_env.HOME }}/programs/slurp/slurp"
+      mode: 0755
+
+  - name: Create link to slurp
+    file:
+      state: link
+      path: "{{ ansible_env.HOME }}/.local/bin/slurp"
+      src: "{{ ansible_env.HOME }}/programs/slurp/slurp"
